@@ -1,0 +1,808 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/brfss_checks.log
+  log type:  text
+ opened on:   2 Nov 2026, 22:16:42
+
+. di as text _n "=== BRFSS checks: 2021Q1 respondents and BMI by BMI < 30 / >= 30, run on $S_DATE $S_TIME ==="
+
+=== BRFSS checks: 2021Q1 respondents and BMI by BMI < 30 / >= 30, run on  2 Nov 2026 22:16:42 ===
+
+. 
+. *==============================================================================
+. * A. State-quarter file: what exists in 2021Q1
+. *==============================================================================
+. use "$ctrl/state_controls_yq.dta", clear
+
+. drop if inlist(_state, 1, 12, 13, 20, 28, 37, 45, 46, 47, 48) | inlist(_state, 55, 56)
+(180 observations deleted)
+
+. di as text _n "---- A. State-quarter file (analysis states, before the CA/NV/MS ext drops): 2021Q1 ----"
+
+---- A. State-quarter file (analysis states, before the CA/NV/MS ext drops): 2021Q1 ----
+
+. quietly count if yq_date == tq(2021q1)
+
+. di as text "state rows in 2021Q1: " r(N)
+state rows in 2021Q1: 39
+
+. foreach y in rx_ob_1k_adult spend_ob_adult rx_nonob_1k_adult spend_nonob_adult {
+  2.     quietly count if yq_date == tq(2021q1) & !missing(`y')
+  3.     di as text "  2021Q1 rows with `y' observed: " r(N)
+  4. }
+  2021Q1 rows with rx_ob_1k_adult observed: 39
+  2021Q1 rows with spend_ob_adult observed: 37
+  2021Q1 rows with rx_nonob_1k_adult observed: 39
+  2021Q1 rows with spend_nonob_adult observed: 38
+
+. quietly count if yq_date == tq(2021q1) & !missing($enrvar)
+
+. di as text "  2021Q1 rows with the enrollment control ($enrvar = log adult enrollment) observed: " r(N) "   (zero = every model that controls for enrollment, and every fixsample = 1 model, loses 202
+> 1Q1)"
+  2021Q1 rows with the enrollment control (ln_enroll = log adult enrollment) observed: 39   (zero = every model that controls for enrollment, and every fixsample = 1 model, loses 2021Q1)
+
+. quietly count if yq_date == tq(2021q1) & !missing(ln_unwind)
+
+. di as text "  2021Q1 rows with ln_unwind observed: " r(N)
+  2021Q1 rows with ln_unwind observed: 39
+
+. egen byte _nmpol = rowmiss($pol_all)
+
+. quietly count if yq_date == tq(2021q1) & _nmpol == 0
+
+. di as text "  2021Q1 rows with every policy control observed: " r(N)
+  2021Q1 rows with every policy control observed: 37
+
+. quietly count if _nmpol > 0
+
+. di as text "  state-quarters (all quarters) with a missing policy control: " r(N) "   (expected: DC and Nebraska, which have no NCSL politics data)"
+  state-quarters (all quarters) with a missing policy control: 40   (expected: DC and Nebraska, which have no NCSL politics data)
+
+. capture noisily tab _state if _nmpol > 0
+
+BRFSS state |
+       FIPS |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         11 |         20       50.00       50.00
+         31 |         20       50.00      100.00
+------------+-----------------------------------
+      Total |         40      100.00
+
+. drop _nmpol
+
+. 
+. *==============================================================================
+. * B. BRFSS microdata: 2021Q1 respondents through the stages
+. *==============================================================================
+. tempfile acc_q acc_s
+
+. local drops "inlist(_state, 1, 12, 13, 20, 28, 37, 45, 46, 47, 48) | inlist(_state, 55, 56)"
+
+. local lab0 "all records in the BRFSS analytic file"
+
+. local lab1 "no diabetes (diabetes != 1)"
+
+. local lab2 "analysis states (repo drops; ext also drops CA, NV)"
+
+. local lab3 "analysis window (main: through 2024Q4)"
+
+. local lab4 "Medicaid enrollees (medicaid == 1)"
+
+. local lab5 "BMI, weight and individual controls observed"
+
+. local lab6 "state-level controls observed = primary S1 sample"
+
+. 
+. postfile hb str5 run str12 stage str8 grp double n double n_states double mean_u double sd_u double min_u double max_u ///
+>     double n_w double mean_w double sd_w double sum_w double share_u double share_w ///
+>     using "$res/brfss_bmi30_summary.dta", replace
+(file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/brfss_bmi30_summary.dta not found)
+
+. 
+. foreach run of global runs {
+  2. 
+.     use "$brfss", clear
+  3. 
+.     rename yq yq_date
+  4.     assert inrange(yq_date, tq(2021q1), tq(2025q4))
+  5.     quietly summarize _bmi5
+  6.     assert r(mean) > 1500 & r(mean) < 5000
+  7.     gen double bmi = _bmi5 / 100
+  8. 
+.     foreach v in ln_unwind $enrvar $pol_all {
+  9.         capture confirm variable `v'
+ 10.         if _rc == 0 {
+ 11.             di as error "`v' already exists in the BRFSS file; rename it before merging"
+ 12.             exit 110
+ 13.         }
+ 14.     }
+ 15.     merge m:1 _state yq_date using "$ctrl/state_controls_yq.dta", keepusing(ln_unwind $enrvar $pol_all) keep(master match) generate(_ms)
+ 16.     drop _ms
+ 17. 
+.     *---- stage flags (cumulative) ------------------------------------------------------------------
+.     local last = cond("`run'" == "main", tq(2024q4), tq(2025q4))
+ 18.     gen long _s0 = 1
+ 19.     gen long _s1 = (diabetes != 1)
+ 20.     gen long _s2 = (_s1 == 1) & !(`drops')
+ 21.     if "`run'" == "ext" {
+ 22.         replace _s2 = 0 if inlist(_state, 6, 32, 28)
+ 23.     }
+ 24.     gen long _s3 = (_s2 == 1) & (yq_date <= `last')
+ 25.     gen long _s4 = (_s3 == 1) & (medicaid == 1)
+ 26.     egen byte _nmI = rowmiss(bmi $controls _llcpwt)
+ 27.     gen long _s5 = (_s4 == 1) & (_nmI == 0)
+ 28.     egen byte _nmS = rowmiss(${cs_S4})
+ 29.     gen long _s6 = (_s5 == 1) & (_nmS == 0)
+ 30. 
+.     * the primary S1 rule in 03 (fixsample = 1): outcome + weight + individual controls + all S4 controls observed, Medicaid enrollees
+.     egen byte _nmP = rowmiss(bmi $controls _llcpwt ${cs_S4})
+ 31.     quietly count if _s3 == 1 & medicaid == 1 & _nmP == 0
+ 32.     local nP = r(N)
+ 33.     quietly count if _s6 == 1
+ 34.     local n6 = r(N)
+ 35.     di as text _n "===================== `run' sample ====================="
+ 36.     di as text "check: respondents in stage s6 = `n6'; respondents the primary S1 rule keeps = `nP'"
+ 37.     assert `n6' == `nP'
+ 38. 
+.     di as text _n "Stages (cumulative):"
+ 39.     forvalues j = 0/6 {
+ 40.         di as text "  s`j'  `lab`j''"
+ 41.     }
+ 42. 
+.     *---- by quarter ------------------------------------------------------------------------------------
+.     preserve
+ 43.     forvalues j = 0/6 {
+ 44.         quietly egen long _tg`j' = tag(_state yq_date) if _s`j' == 1
+ 45.         quietly replace _tg`j' = 0 if missing(_tg`j')
+ 46.     }
+ 47.     collapse (sum) n_s0=_s0 n_s1=_s1 n_s2=_s2 n_s3=_s3 n_s4=_s4 n_s5=_s5 n_s6=_s6 ///
+>         ns_s0=_tg0 ns_s1=_tg1 ns_s2=_tg2 ns_s3=_tg3 ns_s4=_tg4 ns_s5=_tg5 ns_s6=_tg6, by(yq_date)
+ 48.     format yq_date %tq
+ 49.     gen str6 quarter = string(yq_date, "%tq")
+ 50.     gen str5 run = "`run'"
+ 51.     order run yq_date quarter
+ 52.     di as text _n "Respondents remaining after each stage, by interview quarter (`run'):"
+ 53.     list yq_date n_s0 n_s1 n_s2 n_s3 n_s4 n_s5 n_s6, noobs sep(0)
+ 54.     di as text _n "States with at least one respondent after each stage, by interview quarter (`run'):"
+ 55.     list yq_date ns_s0 ns_s1 ns_s2 ns_s3 ns_s4 ns_s5 ns_s6, noobs sep(0)
+ 56.     di as text _n "2021Q1 at each stage (`run'):"
+ 57.     forvalues j = 0/6 {
+ 58.         quietly summarize n_s`j' if yq_date == tq(2021q1), meanonly
+ 59.         local r1 = r(sum)
+ 60.         quietly summarize ns_s`j' if yq_date == tq(2021q1), meanonly
+ 61.         local s1 = r(sum)
+ 62.         di as text "  s`j'  `lab`j'':  respondents `r1', states `s1'"
+ 63.     }
+ 64.     acc_append "`acc_q'"
+ 65.     restore
+ 66. 
+.     *---- 2021Q1 by state -----------------------------------------------------------------------------------
+.     quietly count if yq_date == tq(2021q1)
+ 67.     local nq1 = r(N)
+ 68.     if `nq1' == 0 {
+ 69.         di as error _n "There are NO 2021Q1 respondents in the `run' BRFSS file."
+ 70.     }
+ 71.     if `nq1' > 0 {
+ 72.         preserve
+ 73.         keep if yq_date == tq(2021q1)
+ 74.         collapse (sum) n_s0=_s0 n_s1=_s1 n_s2=_s2 n_s3=_s3 n_s4=_s4 n_s5=_s5 n_s6=_s6, by(_state)
+ 75.         gen str5 run = "`run'"
+ 76.         order run _state
+ 77.         di as text _n "2021Q1 respondents by state at each stage (`run'; states with no 2021Q1 respondents are not listed):"
+ 78.         list _state n_s0 n_s1 n_s2 n_s3 n_s4 n_s5 n_s6, noobs sep(0)
+ 79.         acc_append "`acc_s'"
+ 80.         restore
+ 81.     }
+ 82. 
+.     *---- why respondents are lost at s5 and s6 ------------------------------------------------------------------
+.     di as text _n "Respondents lost between s4 (Medicaid enrollees) and s5 (BMI, weight, individual controls observed), by variable:"
+ 83.     di as text %-16s "variable" %16s "2021Q1 missing" %10s "share" %20s "later qtrs missing" %10s "share"
+ 84.     quietly count if _s4 == 1 & yq_date == tq(2021q1)
+ 85.     local d1 = r(N)
+ 86.     quietly count if _s4 == 1 & yq_date > tq(2021q1)
+ 87.     local d2 = r(N)
+ 88.     di as text "  (Medicaid respondents: `d1' in 2021Q1, `d2' in later quarters)"
+ 89.     foreach v in bmi _llcpwt $controls {
+ 90.         quietly count if _s4 == 1 & yq_date == tq(2021q1) & missing(`v')
+ 91.         local m1 = r(N)
+ 92.         quietly count if _s4 == 1 & yq_date > tq(2021q1) & missing(`v')
+ 93.         local m2 = r(N)
+ 94.         local sh1 = cond(`d1' > 0, `m1' / `d1', .)
+ 95.         local sh2 = cond(`d2' > 0, `m2' / `d2', .)
+ 96.         di as text %-16s "`v'" %16.0fc `m1' %10.3f `sh1' %20.0fc `m2' %10.3f `sh2'
+ 97.     }
+ 98. 
+.     di as text _n "Respondents lost between s5 and s6 (a state-level control is missing):"
+ 99.     quietly count if _s5 == 1 & yq_date == tq(2021q1)
+100.     local a1 = r(N)
+101.     quietly count if _s5 == 1 & _s6 == 0 & yq_date == tq(2021q1)
+102.     local l1 = r(N)
+103.     quietly count if _s5 == 1 & yq_date == tq(2021q1) & missing($enrvar)
+104.     local enr1 = r(N)
+105.     quietly count if _s5 == 1 & _s6 == 0 & yq_date == tq(2021q1) & !missing($enrvar)
+106.     local oth1 = r(N)
+107.     quietly count if _s5 == 1 & yq_date > tq(2021q1)
+108.     local a2 = r(N)
+109.     quietly count if _s5 == 1 & _s6 == 0 & yq_date > tq(2021q1)
+110.     local l2 = r(N)
+111.     di as text "  2021Q1:       s5 respondents `a1', lost at s6 `l1'  (missing enrollment control $enrvar: `enr1'; lost for another control: `oth1')"
+112.     di as text "  later quarters: s5 respondents `a2', lost at s6 `l2'"
+113.     di as text "  losses at s6 by state, all quarters (expected: the DC and Nebraska respondents):"
+114.     capture noisily tab _state if _s5 == 1 & _s6 == 0
+115.     di as text "  s5 respondents with each state-level control missing (2021Q1 | later quarters):"
+116.     foreach v in ln_unwind $enrvar $pol_all {
+117.         quietly count if _s5 == 1 & yq_date == tq(2021q1) & missing(`v')
+118.         local m1 = r(N)
+119.         quietly count if _s5 == 1 & yq_date > tq(2021q1) & missing(`v')
+120.         local m2 = r(N)
+121.         di as text "    " %-24s "`v'" %10.0fc `m1' %12.0fc `m2'
+122.     }
+123. 
+.     *---- B. BMI < 30 and BMI >= 30 ---------------------------------------------------------------------------------
+.     di as text _n "BMI by group (`run'): stages s6 (primary S1 sample), s5, s4. Weighted = BRFSS weight _llcpwt."
+124.     foreach j in 6 5 4 {
+125.         local n_all = .
+126.         local sw_all = .
+127.         foreach g in all lt30 ge30 {
+128.             local cnd "_s`j' == 1 & !missing(bmi)"
+129.             if "`g'" == "lt30" local cnd "`cnd' & bmi < 30"
+130.             if "`g'" == "ge30" local cnd "`cnd' & bmi >= 30"
+131.             quietly summarize bmi if `cnd'
+132.             local n   = r(N)
+133.             local mu  = r(mean)
+134.             local sdu = r(sd)
+135.             local mn  = r(min)
+136.             local mx  = r(max)
+137.             quietly summarize bmi [aw = _llcpwt] if `cnd'
+138.             local nw  = r(N)
+139.             local muw = r(mean)
+140.             quietly summarize _llcpwt if `cnd', meanonly
+141.             local sw  = r(sum)
+142.             capture drop _dv
+143.             quietly gen double _dv = (bmi - `muw')^2 * _llcpwt if `cnd'
+144.             quietly summarize _dv, meanonly
+145.             local sdw = sqrt(r(sum) / `sw')
+146.             drop _dv
+147.             capture drop _tgb
+148.             quietly egen byte _tgb = tag(_state) if `cnd'
+149.             quietly count if _tgb == 1
+150.             local nst = r(N)
+151.             drop _tgb
+152.             if "`g'" == "all" {
+153.                 local n_all  = `n'
+154.                 local sw_all = `sw'
+155.             }
+156.             local shu = `n' / `n_all'
+157.             local shw = `sw' / `sw_all'
+158.             post hb ("`run'") ("s`j'") ("`g'") (`n') (`nst') (`mu') (`sdu') (`mn') (`mx') (`nw') (`muw') (`sdw') (`sw') (`shu') (`shw')
+159.         }
+160.     }
+161. }
+(variable yq_date was int, now float to accommodate using data's values)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                         1,063,416  (_ms==3)
+    -----------------------------------------
+
+===================== main sample =====================
+check: respondents in stage s6 = 58469; respondents the primary S1 rule keeps = 58469
+
+Stages (cumulative):
+  s0  all records in the BRFSS analytic file
+  s1  no diabetes (diabetes != 1)
+  s2  analysis states (repo drops; ext also drops CA, NV)
+  s3  analysis window (main: through 2024Q4)
+  s4  Medicaid enrollees (medicaid == 1)
+  s5  BMI, weight and individual controls observed
+  s6  state-level controls observed = primary S1 sample
+
+Respondents remaining after each stage, by interview quarter (main):
+
+  +--------------------------------------------------------------+
+  | yq_date    n_s0    n_s1    n_s2    n_s3   n_s4   n_s5   n_s6 |
+  |--------------------------------------------------------------|
+  |  2021q1   44123   39372   34532   34532   2762   2762   2630 |
+  |  2021q2   53583   47695   41382   41382   3664   3664   3524 |
+  |  2021q3   57459   51023   44994   44994   4053   4053   3955 |
+  |  2021q4   58082   51601   44763   44763   3773   3773   3634 |
+  |  2022q1   53818   47849   39080   39080   3299   3299   3165 |
+  |  2022q2   54992   48817   40935   40935   3422   3422   3277 |
+  |  2022q3   56238   49753   42342   42342   3831   3831   3732 |
+  |  2022q4   60619   53723   44514   44514   3985   3985   3911 |
+  |  2023q1   51003   45500   38933   38933   3503   3503   3413 |
+  |  2023q2   54867   48611   40592   40592   3790   3790   3610 |
+  |  2023q3   55822   49294   40523   40523   3768   3768   3572 |
+  |  2023q4   58230   51524   44145   44145   3831   3831   3630 |
+  |  2024q1   53544   47315   40948   40948   3864   3864   3678 |
+  |  2024q2   61059   53617   46929   46929   4396   4396   4175 |
+  |  2024q3   61577   54059   45091   45091   4558   4558   4385 |
+  |  2024q4   56462   49744   43807   43807   4379   4379   4178 |
+  |  2025q1   31371   27706   24436       0      0      0      0 |
+  |  2025q2   52848   46418   39754       0      0      0      0 |
+  |  2025q3   42529   37235   32041       0      0      0      0 |
+  |  2025q4   45190   39605   33578       0      0      0      0 |
+  +--------------------------------------------------------------+
+
+States with at least one respondent after each stage, by interview quarter (main):
+
+  +-----------------------------------------------------------------+
+  | yq_date   ns_s0   ns_s1   ns_s2   ns_s3   ns_s4   ns_s5   ns_s6 |
+  |-----------------------------------------------------------------|
+  |  2021q1      47      47      39      39      39      39      37 |
+  |  2021q2      47      47      39      39      39      39      37 |
+  |  2021q3      47      47      39      39      39      39      37 |
+  |  2021q4      47      47      39      39      39      39      37 |
+  |  2022q1      48      48      39      39      39      39      37 |
+  |  2022q2      48      48      39      39      39      39      37 |
+  |  2022q3      48      48      39      39      39      39      37 |
+  |  2022q4      48      48      39      39      39      39      37 |
+  |  2023q1      48      48      39      39      39      39      37 |
+  |  2023q2      46      46      37      37      37      37      35 |
+  |  2023q3      46      46      37      37      37      37      35 |
+  |  2023q4      46      46      37      37      37      37      35 |
+  |  2024q1      48      48      39      39      39      39      37 |
+  |  2024q2      47      47      39      39      39      39      37 |
+  |  2024q3      47      47      39      39      39      39      37 |
+  |  2024q4      47      47      39      39      39      39      37 |
+  |  2025q1      48      48      39       0       0       0       0 |
+  |  2025q2      45      45      37       0       0       0       0 |
+  |  2025q3      45      45      37       0       0       0       0 |
+  |  2025q4      45      45      37       0       0       0       0 |
+  +-----------------------------------------------------------------+
+
+2021Q1 at each stage (main):
+  s0  all records in the BRFSS analytic file:  respondents 44123, states 47
+  s1  no diabetes (diabetes != 1):  respondents 39372, states 47
+  s2  analysis states (repo drops; ext also drops CA, NV):  respondents 34532, states 39
+  s3  analysis window (main: through 2024Q4):  respondents 34532, states 39
+  s4  Medicaid enrollees (medicaid == 1):  respondents 2762, states 39
+  s5  BMI, weight and individual controls observed:  respondents 2762, states 39
+  s6  state-level controls observed = primary S1 sample:  respondents 2630, states 37
+(file C:\Users\JSEMPR~1\AppData\Local\Temp\ST_6fb8_000001.tmp not found)
+file C:\Users\JSEMPR~1\AppData\Local\Temp\ST_6fb8_000001.tmp saved as .dta format
+(1,019,293 observations deleted)
+
+2021Q1 respondents by state at each stage (main; states with no 2021Q1 respondents are not listed):
+
+  +---------------------------------------------------------+
+  | _state   n_s0   n_s1   n_s2   n_s3   n_s4   n_s5   n_s6 |
+  |---------------------------------------------------------|
+  |      1    482    402      0      0      0      0      0 |
+  |      2    532    474    474    474     45     45     45 |
+  |      4   1092    953    953    953     33     33     33 |
+  |      5    405    330    330    330     29     29     29 |
+  |      6    603    533    533    533     23     23     23 |
+  |      8   1307   1226   1226   1226    183    183    183 |
+  |      9   1042    955    955    955     52     52     52 |
+  |     10    437    395    395    395     42     42     42 |
+  |     11    533    485    485    485     42     42      0 |
+  |     13    701    598      0      0      0      0      0 |
+  |     15   1386   1237   1237   1237     59     59     59 |
+  |     16    964    866    866    866     87     87     87 |
+  |     17    464    422    422    422     33     33     33 |
+  |     18    709    627    627    627     61     61     61 |
+  |     19   1233   1117   1117   1117     63     63     63 |
+  |     21    199    168    168    168     15     15     15 |
+  |     22    119    103    103    103     18     18     18 |
+  |     23   1384   1238   1238   1238     37     37     37 |
+  |     24   1684   1476   1476   1476    100    100    100 |
+  |     25   1124   1046   1046   1046    153    153    153 |
+  |     26    783    698    698    698     77     77     77 |
+  |     27   2598   2378   2378   2378     69     69     69 |
+  |     28    410    342      0      0      0      0      0 |
+  |     29   1440   1260   1260   1260     69     69     69 |
+  |     30    860    769    769    769     69     69     69 |
+  |     31   1988   1804   1804   1804     90     90      0 |
+  |     32    299    267    267    267     25     25     25 |
+  |     33    671    605    605    605     33     33     33 |
+  |     34    823    759    759    759     54     54     54 |
+  |     35    974    835    835    835    216    216    216 |
+  |     36   3415   3020   3020   3020    372    372    372 |
+  |     38    593    537    537    537     18     18     18 |
+  |     39   1618   1409   1409   1409    152    152    152 |
+  |     40    441    382    382    382      9      9      9 |
+  |     41    904    823    823    823     55     55     55 |
+  |     42    919    822    822    822     37     37     37 |
+  |     44    833    753    753    753     45     45     45 |
+  |     45    724    617      0      0      0      0      0 |
+  |     46    923    828      0      0      0      0      0 |
+  |     47    761    651      0      0      0      0      0 |
+  |     48   1252   1109      0      0      0      0      0 |
+  |     49    963    889    889    889     47     47     47 |
+  |     50    504    461    461    461     63     63     63 |
+  |     51    164    151    151    151      6      6      6 |
+  |     53   1399   1284   1284   1284     76     76     76 |
+  |     54   1142    975    975    975    105    105    105 |
+  |     56    322    293      0      0      0      0      0 |
+  +---------------------------------------------------------+
+(file C:\Users\JSEMPR~1\AppData\Local\Temp\ST_6fb8_000002.tmp not found)
+file C:\Users\JSEMPR~1\AppData\Local\Temp\ST_6fb8_000002.tmp saved as .dta format
+
+Respondents lost between s4 (Medicaid enrollees) and s5 (BMI, weight, individual controls observed), by variable:
+variable          2021Q1 missing     share  later qtrs missing     share
+  (Medicaid respondents: 2762 in 2021Q1, 58116 in later quarters)
+bmi                            0     0.000                   0     0.000
+_llcpwt                        0     0.000                   0     0.000
+dum_age2                       0     0.000                   0     0.000
+dum_age3                       0     0.000                   0     0.000
+dum_age4                       0     0.000                   0     0.000
+dum_age5                       0     0.000                   0     0.000
+dum_age6                       0     0.000                   0     0.000
+dum_age7                       0     0.000                   0     0.000
+dum_age8                       0     0.000                   0     0.000
+dum_age9                       0     0.000                   0     0.000
+dum_race1                      0     0.000                   0     0.000
+dum_race2                      0     0.000                   0     0.000
+dum_race5                      0     0.000                   0     0.000
+dum_sex2                       0     0.000                   0     0.000
+dum_educ2                      0     0.000                   0     0.000
+dum_educ3                      0     0.000                   0     0.000
+dum_educ4                      0     0.000                   0     0.000
+married                        0     0.000                   0     0.000
+metro                          0     0.000                   0     0.000
+parent                         0     0.000                   0     0.000
+
+Respondents lost between s5 and s6 (a state-level control is missing):
+  2021Q1:       s5 respondents 2762, lost at s6 132  (missing enrollment control ln_enroll: 0; lost for another control: 132)
+  later quarters: s5 respondents 58116, lost at s6 2277
+  losses at s6 by state, all quarters (expected: the DC and Nebraska respondents):
+
+ STATE FIPS |
+       CODE |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         11 |        702       29.14       29.14
+         31 |      1,707       70.86      100.00
+------------+-----------------------------------
+      Total |      2,409      100.00
+  s5 respondents with each state-level control missing (2021Q1 | later quarters):
+    ln_unwind                        0           0
+    ln_enroll                        0           0
+    gov_dem                         42         660
+    pct_dem_senate                 132       2,277
+    pct_dem_house                  132       2,277
+    unw_term_pb                      0           0
+    held_proc_share                  0           0
+    post_x_base_exparte3             0           0
+    ha_usds_assist                   0           0
+
+BMI by group (main): stages s6 (primary S1 sample), s5, s4. Weighted = BRFSS weight _llcpwt.
+(variable yq_date was int, now float to accommodate using data's values)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                         1,063,416  (_ms==3)
+    -----------------------------------------
+(25,459 real changes made)
+
+===================== ext sample =====================
+check: respondents in stage s6 = 69528; respondents the primary S1 rule keeps = 69528
+
+Stages (cumulative):
+  s0  all records in the BRFSS analytic file
+  s1  no diabetes (diabetes != 1)
+  s2  analysis states (repo drops; ext also drops CA, NV)
+  s3  analysis window (main: through 2024Q4)
+  s4  Medicaid enrollees (medicaid == 1)
+  s5  BMI, weight and individual controls observed
+  s6  state-level controls observed = primary S1 sample
+
+Respondents remaining after each stage, by interview quarter (ext):
+
+  +--------------------------------------------------------------+
+  | yq_date    n_s0    n_s1    n_s2    n_s3   n_s4   n_s5   n_s6 |
+  |--------------------------------------------------------------|
+  |  2021q1   44123   39372   33732   33732   2714   2714   2582 |
+  |  2021q2   53583   47695   40222   40222   3595   3595   3455 |
+  |  2021q3   57459   51023   43563   43563   3986   3986   3888 |
+  |  2021q4   58082   51601   43268   43268   3621   3621   3482 |
+  |  2022q1   53818   47849   38497   38497   3231   3231   3097 |
+  |  2022q2   54992   48817   40428   40428   3389   3389   3244 |
+  |  2022q3   56238   49753   39225   39225   3433   3433   3334 |
+  |  2022q4   60619   53723   42074   42074   3682   3682   3608 |
+  |  2023q1   51003   45500   36481   36481   3271   3271   3181 |
+  |  2023q2   54867   48611   38664   38664   3655   3655   3475 |
+  |  2023q3   55822   49294   38826   38826   3652   3652   3456 |
+  |  2023q4   58230   51524   42720   42720   3726   3726   3525 |
+  |  2024q1   53544   47315   39034   39034   3761   3761   3575 |
+  |  2024q2   61059   53617   45467   45467   4322   4322   4101 |
+  |  2024q3   61577   54059   43760   43760   4481   4481   4308 |
+  |  2024q4   56462   49744   42293   42293   4261   4261   4060 |
+  |  2025q1   31371   27706   24233   24233   2504   2504   2387 |
+  |  2025q2   52848   46418   39754   39754   4125   4125   3977 |
+  |  2025q3   42529   37235   32041   32041   3477   3477   3315 |
+  |  2025q4   45190   39605   33578   33578   3555   3555   3478 |
+  +--------------------------------------------------------------+
+
+States with at least one respondent after each stage, by interview quarter (ext):
+
+  +-----------------------------------------------------------------+
+  | yq_date   ns_s0   ns_s1   ns_s2   ns_s3   ns_s4   ns_s5   ns_s6 |
+  |-----------------------------------------------------------------|
+  |  2021q1      47      47      37      37      37      37      35 |
+  |  2021q2      47      47      37      37      37      37      35 |
+  |  2021q3      47      47      37      37      37      37      35 |
+  |  2021q4      47      47      37      37      37      37      35 |
+  |  2022q1      48      48      37      37      37      37      35 |
+  |  2022q2      48      48      37      37      37      37      35 |
+  |  2022q3      48      48      37      37      37      37      35 |
+  |  2022q4      48      48      37      37      37      37      35 |
+  |  2023q1      48      48      37      37      37      37      35 |
+  |  2023q2      46      46      35      35      35      35      33 |
+  |  2023q3      46      46      35      35      35      35      33 |
+  |  2023q4      46      46      35      35      35      35      33 |
+  |  2024q1      48      48      37      37      37      37      35 |
+  |  2024q2      47      47      37      37      37      37      35 |
+  |  2024q3      47      47      37      37      37      37      35 |
+  |  2024q4      47      47      37      37      37      37      35 |
+  |  2025q1      48      48      37      37      36      36      35 |
+  |  2025q2      45      45      37      37      37      37      35 |
+  |  2025q3      45      45      37      37      37      37      35 |
+  |  2025q4      45      45      37      37      37      37      35 |
+  +-----------------------------------------------------------------+
+
+2021Q1 at each stage (ext):
+  s0  all records in the BRFSS analytic file:  respondents 44123, states 47
+  s1  no diabetes (diabetes != 1):  respondents 39372, states 47
+  s2  analysis states (repo drops; ext also drops CA, NV):  respondents 33732, states 37
+  s3  analysis window (main: through 2024Q4):  respondents 33732, states 37
+  s4  Medicaid enrollees (medicaid == 1):  respondents 2714, states 37
+  s5  BMI, weight and individual controls observed:  respondents 2714, states 37
+  s6  state-level controls observed = primary S1 sample:  respondents 2582, states 35
+file C:\Users\JSEMPR~1\AppData\Local\Temp\ST_6fb8_000001.tmp saved as .dta format
+(1,019,293 observations deleted)
+
+2021Q1 respondents by state at each stage (ext; states with no 2021Q1 respondents are not listed):
+
+  +---------------------------------------------------------+
+  | _state   n_s0   n_s1   n_s2   n_s3   n_s4   n_s5   n_s6 |
+  |---------------------------------------------------------|
+  |      1    482    402      0      0      0      0      0 |
+  |      2    532    474    474    474     45     45     45 |
+  |      4   1092    953    953    953     33     33     33 |
+  |      5    405    330    330    330     29     29     29 |
+  |      6    603    533      0      0      0      0      0 |
+  |      8   1307   1226   1226   1226    183    183    183 |
+  |      9   1042    955    955    955     52     52     52 |
+  |     10    437    395    395    395     42     42     42 |
+  |     11    533    485    485    485     42     42      0 |
+  |     13    701    598      0      0      0      0      0 |
+  |     15   1386   1237   1237   1237     59     59     59 |
+  |     16    964    866    866    866     87     87     87 |
+  |     17    464    422    422    422     33     33     33 |
+  |     18    709    627    627    627     61     61     61 |
+  |     19   1233   1117   1117   1117     63     63     63 |
+  |     21    199    168    168    168     15     15     15 |
+  |     22    119    103    103    103     18     18     18 |
+  |     23   1384   1238   1238   1238     37     37     37 |
+  |     24   1684   1476   1476   1476    100    100    100 |
+  |     25   1124   1046   1046   1046    153    153    153 |
+  |     26    783    698    698    698     77     77     77 |
+  |     27   2598   2378   2378   2378     69     69     69 |
+  |     28    410    342      0      0      0      0      0 |
+  |     29   1440   1260   1260   1260     69     69     69 |
+  |     30    860    769    769    769     69     69     69 |
+  |     31   1988   1804   1804   1804     90     90      0 |
+  |     32    299    267      0      0      0      0      0 |
+  |     33    671    605    605    605     33     33     33 |
+  |     34    823    759    759    759     54     54     54 |
+  |     35    974    835    835    835    216    216    216 |
+  |     36   3415   3020   3020   3020    372    372    372 |
+  |     38    593    537    537    537     18     18     18 |
+  |     39   1618   1409   1409   1409    152    152    152 |
+  |     40    441    382    382    382      9      9      9 |
+  |     41    904    823    823    823     55     55     55 |
+  |     42    919    822    822    822     37     37     37 |
+  |     44    833    753    753    753     45     45     45 |
+  |     45    724    617      0      0      0      0      0 |
+  |     46    923    828      0      0      0      0      0 |
+  |     47    761    651      0      0      0      0      0 |
+  |     48   1252   1109      0      0      0      0      0 |
+  |     49    963    889    889    889     47     47     47 |
+  |     50    504    461    461    461     63     63     63 |
+  |     51    164    151    151    151      6      6      6 |
+  |     53   1399   1284   1284   1284     76     76     76 |
+  |     54   1142    975    975    975    105    105    105 |
+  |     56    322    293      0      0      0      0      0 |
+  +---------------------------------------------------------+
+file C:\Users\JSEMPR~1\AppData\Local\Temp\ST_6fb8_000002.tmp saved as .dta format
+
+Respondents lost between s4 (Medicaid enrollees) and s5 (BMI, weight, individual controls observed), by variable:
+variable          2021Q1 missing     share  later qtrs missing     share
+  (Medicaid respondents: 2714 in 2021Q1, 69727 in later quarters)
+bmi                            0     0.000                   0     0.000
+_llcpwt                        0     0.000                   0     0.000
+dum_age2                       0     0.000                   0     0.000
+dum_age3                       0     0.000                   0     0.000
+dum_age4                       0     0.000                   0     0.000
+dum_age5                       0     0.000                   0     0.000
+dum_age6                       0     0.000                   0     0.000
+dum_age7                       0     0.000                   0     0.000
+dum_age8                       0     0.000                   0     0.000
+dum_age9                       0     0.000                   0     0.000
+dum_race1                      0     0.000                   0     0.000
+dum_race2                      0     0.000                   0     0.000
+dum_race5                      0     0.000                   0     0.000
+dum_sex2                       0     0.000                   0     0.000
+dum_educ2                      0     0.000                   0     0.000
+dum_educ3                      0     0.000                   0     0.000
+dum_educ4                      0     0.000                   0     0.000
+married                        0     0.000                   0     0.000
+metro                          0     0.000                   0     0.000
+parent                         0     0.000                   0     0.000
+
+Respondents lost between s5 and s6 (a state-level control is missing):
+  2021Q1:       s5 respondents 2714, lost at s6 132  (missing enrollment control ln_enroll: 0; lost for another control: 132)
+  later quarters: s5 respondents 69727, lost at s6 2781
+  losses at s6 by state, all quarters (expected: the DC and Nebraska respondents):
+
+ STATE FIPS |
+       CODE |      Freq.     Percent        Cum.
+------------+-----------------------------------
+         11 |        828       28.42       28.42
+         31 |      2,085       71.58      100.00
+------------+-----------------------------------
+      Total |      2,913      100.00
+  s5 respondents with each state-level control missing (2021Q1 | later quarters):
+    ln_unwind                        0           0
+    ln_enroll                        0           0
+    gov_dem                         42         786
+    pct_dem_senate                 132       2,781
+    pct_dem_house                  132       2,781
+    unw_term_pb                      0           0
+    held_proc_share                  0           0
+    post_x_base_exparte3             0           0
+    ha_usds_assist                   0           0
+
+BMI by group (ext): stages s6 (primary S1 sample), s5, s4. Weighted = BRFSS weight _llcpwt.
+
+. postclose hb
+
+. 
+. *==============================================================================
+. * Exports
+. *==============================================================================
+. use "`acc_q'", clear
+
+. sort run yq_date
+
+. export delimited using "$res/brfss_q1_stages.csv", replace
+(file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/brfss_q1_stages.csv not found)
+file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/brfss_q1_stages.csv saved
+
+. capture confirm file "`acc_s'"
+
+. if _rc == 0 {
+.     use "`acc_s'", clear
+.     sort run _state
+.     export delimited using "$res/brfss_q1_by_state.csv", replace
+(file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/brfss_q1_by_state.csv not found)
+file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/brfss_q1_by_state.csv saved
+. }
+
+. if _rc != 0 {
+.     di as error "brfss_q1_by_state.csv not written: no 2021Q1 respondents in any run."
+. }
+
+. 
+. use "$res/brfss_bmi30_summary.dta", clear
+
+. gen str80 stage_label = ""
+(18 missing values generated)
+
+. replace stage_label = "s4: all Medicaid respondents with a BMI" if stage == "s4"
+(6 real changes made)
+
+. replace stage_label = "s5: + weight and individual controls observed (before the state-control restriction; includes DC, NE)" if stage == "s5"
+variable stage_label was str80 now str101
+(6 real changes made)
+
+. replace stage_label = "s6: primary S1 analysis sample" if stage == "s6"
+(6 real changes made)
+
+. gen str30 group_label = ""
+(18 missing values generated)
+
+. replace group_label = "all respondents" if grp == "all"
+(6 real changes made)
+
+. replace group_label = "BMI < 30" if grp == "lt30"
+(6 real changes made)
+
+. replace group_label = "BMI >= 30" if grp == "ge30"
+(6 real changes made)
+
+. format n n_states n_w sum_w %14.0fc
+
+. format mean_u sd_u min_u max_u mean_w sd_w %8.2f
+
+. format share_u share_w %6.3f
+
+. save "$res/brfss_bmi30_summary.dta", replace
+file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/brfss_bmi30_summary.dta saved
+
+. export delimited using "$res/brfss_bmi30_summary.csv", replace
+(file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/brfss_bmi30_summary.csv not found)
+file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/brfss_bmi30_summary.csv saved
+
+. di as text _n "================= BMI by group: unweighted and weighted =================="
+
+================= BMI by group: unweighted and weighted ==================
+
+. di as text "n, mean_u, sd_u, min_u, max_u: unweighted.  n_w, mean_w, sd_w, sum_w: weighted by _llcpwt.  share_u, share_w: share of the stage total."
+n, mean_u, sd_u, min_u, max_u: unweighted.  n_w, mean_w, sd_w, sum_w: weighted by _llcpwt.  share_u, share_w: share of the stage total.
+
+. list run stage grp n n_states mean_u sd_u min_u max_u, noobs sepby(run stage)
+
+  +-------------------------------------------------------------------------+
+  |  run   stage    grp        n   n_states   mean_u   sd_u   min_u   max_u |
+  |-------------------------------------------------------------------------|
+  | main      s6    all   58,469         37    28.92   7.64   12.02   95.30 |
+  | main      s6   lt30   37,302         37    24.45   3.32   12.02   29.99 |
+  | main      s6   ge30   21,167         37    36.80   6.68   30.00   95.30 |
+  |-------------------------------------------------------------------------|
+  | main      s5    all   60,878         39    28.95   7.66   12.02   95.30 |
+  | main      s5   lt30   38,719         39    24.45   3.31   12.02   29.99 |
+  | main      s5   ge30   22,159         39    36.82   6.69   30.00   95.30 |
+  |-------------------------------------------------------------------------|
+  | main      s4    all   60,878         39    28.95   7.66   12.02   95.30 |
+  | main      s4   lt30   38,719         39    24.45   3.31   12.02   29.99 |
+  | main      s4   ge30   22,159         39    36.82   6.69   30.00   95.30 |
+  |-------------------------------------------------------------------------|
+  |  ext      s6    all   69,528         35    28.95   7.67   12.02   95.30 |
+  |  ext      s6   lt30   44,251         35    24.45   3.31   12.02   29.99 |
+  |  ext      s6   ge30   25,277         35    36.83   6.70   30.00   95.30 |
+  |-------------------------------------------------------------------------|
+  |  ext      s5    all   72,441         37    28.98   7.68   12.02   95.30 |
+  |  ext      s5   lt30   45,971         37    24.45   3.31   12.02   29.99 |
+  |  ext      s5   ge30   26,470         37    36.85   6.70   30.00   95.30 |
+  |-------------------------------------------------------------------------|
+  |  ext      s4    all   72,441         37    28.98   7.68   12.02   95.30 |
+  |  ext      s4   lt30   45,971         37    24.45   3.31   12.02   29.99 |
+  |  ext      s4   ge30   26,470         37    36.85   6.70   30.00   95.30 |
+  +-------------------------------------------------------------------------+
+
+. list run stage grp n_w mean_w sd_w sum_w share_u share_w, noobs sepby(run stage)
+
+  +-------------------------------------------------------------------------------+
+  |  run   stage    grp      n_w   mean_w   sd_w        sum_w   share_u   share_w |
+  |-------------------------------------------------------------------------------|
+  | main      s6    all   58,469    28.76   7.68   40,451,064     1.000     1.000 |
+  | main      s6   lt30   37,302    24.33   3.35   26,083,130     0.638     0.645 |
+  | main      s6   ge30   21,167    36.78   6.78   14,367,933     0.362     0.355 |
+  |-------------------------------------------------------------------------------|
+  | main      s5    all   60,878    28.76   7.69   40,926,339     1.000     1.000 |
+  | main      s5   lt30   38,719    24.34   3.35   26,374,733     0.636     0.644 |
+  | main      s5   ge30   22,159    36.79   6.78   14,551,607     0.364     0.356 |
+  |-------------------------------------------------------------------------------|
+  | main      s4    all   60,878    28.76   7.69   40,926,339     1.000     1.000 |
+  | main      s4   lt30   38,719    24.34   3.35   26,374,733     0.636     0.644 |
+  | main      s4   ge30   22,159    36.79   6.78   14,551,607     0.364     0.356 |
+  |-------------------------------------------------------------------------------|
+  |  ext      s6    all   69,528    28.82   7.75   43,757,818     1.000     1.000 |
+  |  ext      s6   lt30   44,251    24.31   3.36   28,076,552     0.636     0.642 |
+  |  ext      s6   ge30   25,277    36.90   6.77   15,681,266     0.364     0.358 |
+  |-------------------------------------------------------------------------------|
+  |  ext      s5    all   72,441    28.83   7.75   44,368,215     1.000     1.000 |
+  |  ext      s5   lt30   45,971    24.32   3.36   28,453,564     0.635     0.641 |
+  |  ext      s5   ge30   26,470    36.90   6.77   15,914,651     0.365     0.359 |
+  |-------------------------------------------------------------------------------|
+  |  ext      s4    all   72,441    28.83   7.75   44,368,215     1.000     1.000 |
+  |  ext      s4   lt30   45,971    24.32   3.36   28,453,564     0.635     0.641 |
+  |  ext      s4   ge30   26,470    36.90   6.77   15,914,651     0.365     0.359 |
+  +-------------------------------------------------------------------------------+
+
+. 
+. di as text _n "Files written to $res: brfss_checks.log  brfss_q1_stages.csv  brfss_q1_by_state.csv  brfss_bmi30_summary.dta/.csv"
+
+Files written to C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results: brfss_checks.log  brfss_q1_stages.csv  brfss_q1_by_state.csv  brfss_bmi30_summa
+> ry.dta/.csv
+
+. log close
+      name:  <unnamed>
+       log:  C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/brfss_checks.log
+  log type:  text
+ closed on:   2 Nov 2026, 22:17:46
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

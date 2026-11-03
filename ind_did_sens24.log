@@ -1,0 +1,319 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/ind_did_sens24.log
+  log type:  text
+ opened on:   2 Nov 2026, 20:32:36
+
+=== Individual-level DiD, sensitivity analyses, S1 model, main sample, run on  2 Nov 2026 20:32:36 ===
+scenarios: base noOKMO addNEDC trend lt30 ge30      (the tie-out at the end needs 03 run with fixsample = 1; fixsample is now 1)
+dynamic models: 1   (1 = also tau0-tau5 and pre1-pre6)
+states in the file after the sample drops: 39
+individuals in the file after the sample drops: 673510
+primary S1 sample (outcome, weight, individual controls and all S4 state-level controls observed, Medicaid enrollees):
+  individuals: 58469
+  of which in 2021Q1: 2630   (2021Q1 is in the primary S1 sample if this is positive)
+  Medicaid respondents in 2021Q1 with outcome, weight and individual controls observed: 2762
+  DC and Nebraska Medicaid respondents added in scenario addNEDC: 2409
+  Missouri and Oklahoma Medicaid respondents removed in scenario noOKMO: 2272
+  state-specific trends (scenario trend) need every treated state to keep at least two untreated quarters in the sample.
+  First treated quarter index (time 1 = 2021Q1) of each treated state:
+(512,225 observations deleted)
+
+  +-------------------+
+  | _state   first_tx |
+  |-------------------|
+  |      6          9 |
+  |     10          9 |
+  |     25         13 |
+  |     26          5 |
+  |     27          9 |
+  |     29         16 |
+  |     33          7 |
+  |     42          9 |
+  |     44          8 |
+  |     51          9 |
+  +-------------------+
+(file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/ind_did_sens24_results.dta not found)
+
+################ main | scenario base | individuals used: 58469 ################
+static (single tau)
+
+                                                        Number of obs = 58,469
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         tau |   .0220849   .1108711     0.20   0.842    -.1952184    .2393883
+------------------------------------------------------------------------------
+static: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+
+                                                        Number of obs = 56,809
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        tau0 |  -.0245927   .1615049    -0.15   0.879    -.3411365    .2919512
+        tau1 |  -.5958734   .2301308    -2.59   0.010    -1.046922   -.1448253
+        tau2 |   .8664948    .264594     3.27   0.001        .3479     1.38509
+        tau3 |   .3123387   .5451173     0.57   0.567    -.7560715    1.380749
+        tau4 |   .4647951   .3069196     1.51   0.130    -.1367564    1.066347
+        tau5 |  -.1294808   .5800003    -0.22   0.823     -1.26626    1.007299
+        pre1 |  -.3067658   .7945428    -0.39   0.699    -1.864041    1.250509
+        pre2 |  -.7473461    .678857    -1.10   0.271    -2.077881    .5831891
+        pre3 |  -.3506851   .7903821    -0.44   0.657    -1.899806    1.198435
+        pre4 |   -.201649   .8117915    -0.25   0.804    -1.792731    1.389433
+        pre5 |   .0702813   .8440965     0.08   0.934    -1.584117     1.72468
+        pre6 |  -.8247522   .7644227    -1.08   0.281    -2.322993    .6734887
+------------------------------------------------------------------------------
+dynamic: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+
+################ main | scenario noOKMO | individuals used: 56197 ################
+static (single tau)
+
+                                                        Number of obs = 56,197
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         tau |   .0270289   .1148361     0.24   0.814    -.1980457    .2521035
+------------------------------------------------------------------------------
+static: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+
+                                                        Number of obs = 54,537
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        tau0 |   .0517185   .1519319     0.34   0.734    -.2460627    .3494996
+        tau1 |  -.5772016   .2338411    -2.47   0.014    -1.035522   -.1188814
+        tau2 |   .8288239   .2668564     3.11   0.002      .305795    1.351853
+        tau3 |   .2869164   .5518842     0.52   0.603    -.7947567     1.36859
+        tau4 |   .5123018   .3062433     1.67   0.094    -.0879241    1.112528
+        tau5 |  -.1400265   .5841797    -0.24   0.811    -1.284998    1.004945
+        pre1 |  -.0950467   .9154475    -0.10   0.917    -1.889291    1.699197
+        pre2 |  -.6933999   .8453625    -0.82   0.412     -2.35028    .9634802
+        pre3 |  -.4159636   1.025565    -0.41   0.685    -2.426035    1.594107
+        pre4 |   .2951222   .8857646     0.33   0.739    -1.440944    2.031189
+        pre5 |   .3562471   1.012242     0.35   0.725    -1.627711    2.340205
+        pre6 |  -.7792293   .9226858    -0.84   0.398     -2.58766    1.029202
+------------------------------------------------------------------------------
+dynamic: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+
+################ main | scenario addNEDC | individuals used: 60878 ################
+static (single tau)
+
+                                                        Number of obs = 60,878
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         tau |   .0307434   .1112797     0.28   0.782    -.1873608    .2488476
+------------------------------------------------------------------------------
+static: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+
+                                                        Number of obs = 59,218
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        tau0 |  -.0167914   .1609543    -0.10   0.917     -.332256    .2986731
+        tau1 |  -.5868582   .2304557    -2.55   0.011    -1.038543   -.1351733
+        tau2 |   .8703164   .2639134     3.30   0.001     .3530556    1.387577
+        tau3 |   .3232054   .5440568     0.59   0.552    -.7431264    1.389537
+        tau4 |   .4771985   .3038125     1.57   0.116     -.118263     1.07266
+        tau5 |  -.1258943   .5795192    -0.22   0.828    -1.261731    1.009942
+        pre1 |  -.2905149   .7951448    -0.37   0.715     -1.84897     1.26794
+        pre2 |  -.7321595   .6785073    -1.08   0.281    -2.062009    .5976904
+        pre3 |  -.3472831   .7932156    -0.44   0.662    -1.901957    1.207391
+        pre4 |  -.1788428   .8102434    -0.22   0.825    -1.766891    1.409205
+        pre5 |     .09448   .8404899     0.11   0.910     -1.55285     1.74181
+        pre6 |  -.7990582   .7608222    -1.05   0.294    -2.290242    .6921259
+------------------------------------------------------------------------------
+dynamic: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+
+################ main | scenario trend | individuals used: 58469 ################
+Note: state-specific linear trends, unitcontrols(trend_q); states need at least two untreated quarters.
+static (single tau)
+
+                                                        Number of obs = 58,469
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         tau |   1.927764   .2617903     7.36   0.000     1.414665    2.440864
+------------------------------------------------------------------------------
+static: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+
+                                                        Number of obs = 56,809
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        tau0 |   .5868417   .1921049     3.05   0.002     .2103229    .9633604
+        tau1 |   .0490645   .1799872     0.27   0.785     -.303704     .401833
+        tau2 |   1.663419   .4081426     4.08   0.000     .8634738    2.463364
+        tau3 |   1.342831   .4447384     3.02   0.003     .4711597    2.214502
+        tau4 |   2.372541   .5688999     4.17   0.000     1.257518    3.487565
+        tau5 |   1.843576   .6880163     2.68   0.007     .4950888    3.192063
+        pre1 |   .0794902   1.470996     0.05   0.957    -2.803608    2.962589
+        pre2 |  -.6204773   1.156945    -0.54   0.592    -2.888048    1.647094
+        pre3 |  -.6015498   1.118736    -0.54   0.591    -2.794232    1.591132
+        pre4 |  -.5753126   1.279172    -0.45   0.653    -3.082443    1.931818
+        pre5 |  -.2708226   1.118296    -0.24   0.809    -2.462643    1.920997
+        pre6 |  -1.178919   .9267447    -1.27   0.203    -2.995305    .6374674
+------------------------------------------------------------------------------
+dynamic: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+
+################ main | scenario lt30 | individuals used: 37302 ################
+Note: this subgroup is cut on the outcome (BMI), so the estimate is not a clean heterogeneity effect (see the header).
+static (single tau)
+
+                                                        Number of obs = 37,302
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         tau |  -.1378323   .0622358    -2.21   0.027    -.2598123   -.0158523
+------------------------------------------------------------------------------
+static: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+
+                                                        Number of obs = 36,293
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        tau0 |  -.4369161   .1166025    -3.75   0.000    -.6654528   -.2083794
+        tau1 |    -.25182   .1096413    -2.30   0.022     -.466713   -.0369269
+        tau2 |   .3643232   .0923697     3.94   0.000      .183282    .5453644
+        tau3 |   .3960951   .0886469     4.47   0.000     .2223504    .5698398
+        tau4 |   .2472579   .4014587     0.62   0.538    -.5395867    1.034102
+        tau5 |  -.1727737   .1604294    -1.08   0.282    -.4872095    .1416621
+        pre1 |   .1932505    .181479     1.06   0.287    -.1624419    .5489428
+        pre2 |   -.074027   .1287196    -0.58   0.565    -.3263127    .1782588
+        pre3 |  -.0536739   .2010266    -0.27   0.789    -.4476788     .340331
+        pre4 |   .3348482   .2023131     1.66   0.098    -.0616781    .7313745
+        pre5 |   .1904872   .1752246     1.09   0.277    -.1529466     .533921
+        pre6 |  -.4881806   .2811306    -1.74   0.082    -1.039186    .0628253
+------------------------------------------------------------------------------
+dynamic: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+
+################ main | scenario ge30 | individuals used: 21167 ################
+Note: this subgroup is cut on the outcome (BMI), so the estimate is not a clean heterogeneity effect (see the header).
+static (single tau)
+
+                                                        Number of obs = 21,167
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+         tau |   -.344333   .2402003    -1.43   0.152     -.815117     .126451
+------------------------------------------------------------------------------
+static: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+
+                                                        Number of obs = 20,516
+------------------------------------------------------------------------------
+         bmi | Coefficient  Std. err.      z    P>|z|     [95% conf. interval]
+-------------+----------------------------------------------------------------
+        tau0 |  -1.022155   .2524063    -4.05   0.000    -1.516862   -.5274475
+        tau1 |  -.3856854   .2336558    -1.65   0.099    -.8436422    .0722715
+        tau2 |   .1233483   .3102737     0.40   0.691     -.484777    .7314735
+        tau3 |  -1.299683   .3987937    -3.26   0.001    -2.081304   -.5180616
+        tau4 |   1.810802   .2577989     7.02   0.000     1.305525    2.316078
+        tau5 |   .2283694   .3855463     0.59   0.554    -.5272874    .9840262
+        pre1 |  -1.158841   .9298517    -1.25   0.213    -2.981317    .6636346
+        pre2 |  -1.619792   .8590262    -1.89   0.059    -3.303452    .0638684
+        pre3 |  -.3531724   .6461117    -0.55   0.585    -1.619528    .9131832
+        pre4 |  -1.285069   .5467641    -2.35   0.019    -2.356707   -.2134312
+        pre5 |    .185763   .6572852     0.28   0.777    -1.102492    1.474018
+        pre6 |  -.0129528   .9697033    -0.01   0.989    -1.913536    1.887631
+------------------------------------------------------------------------------
+dynamic: convergence level 1 (1 = as in 03, 2 = tol(0.05) maxit(2000), 5 = nose, 0 = failed)
+
+================= main sample: sensitivity analyses vs the primary S1 model, individual DiD (BMI among Medicaid enrollees) =================
+(file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/ind_did_sens24_long.csv not found)
+file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/ind_did_sens24_long.csv saved
+(132 missing values generated)
+(78 real changes made)
+(30 real changes made)
+(6 real changes made)
+(6 real changes made)
+(12 real changes made)
+(0 real changes made)
+(j = addNEDC base ge30 lt30 noOKMO trend)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations              132   ->   22          
+Number of variables                   9   ->   23          
+j variable (6 values)              spec   ->   (dropped)
+xij variables:
+                                   cell   ->   celladdNEDC cellbase ... celltrend
+                                     nn   ->   nnaddNEDC nnbase ... nntrend
+                                      b   ->   baddNEDC bbase ... btrend
+-----------------------------------------------------------------------------
+(4 missing values generated)
+(4 missing values generated)
+(4 missing values generated)
+(4 missing values generated)
+(4 missing values generated)
+
+Cells are coefficient (std. err.) with * p<0.10, ** p<0.05, *** p<0.01; model sample rows give counts; d_<scenario> = scenario minus base point estimate.
+
+  +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+  |  run           outcome     model                    term   cellbase              cellnoOKMO           celladdNEDC          celltrend            celllt30              cellge30               d_noOKMO   d_addNEDC   d_trend      d_lt30      d_ge30 |
+  |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+  | main          (sample)    sample                n_states   37                    35                   39                   37                   37                    37                      -2.0000      2.0000    0.0000      0.0000      0.0000 |
+  | main          (sample)    sample        n_treated_states   10                    9                    10                   10                   10                    10                      -1.0000      0.0000    0.0000      0.0000      0.0000 |
+  | main          (sample)    sample        n_state_quarters   586                   554                  618                  586                  585                   585                    -32.0000     32.0000    0.0000     -1.0000     -1.0000 |
+  | main          (sample)    sample           n_respondents   58469                 56197                60878                58469                37302                 21167                 -2.27e+03   2409.0000    0.0000   -2.12e+04   -3.73e+04 |
+  | main          (sample)    sample   n_treated_respondents   5478                  5422                 5478                 5478                 3440                  2038                   -56.0000      0.0000    0.0000   -2.04e+03   -3.44e+03 |
+  |-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+  | main   bmi_if_medicaid    static                     tau   0.0221 (0.1109)       0.0270 (0.1148)      0.0307 (0.1113)      1.9278*** (0.2618)   -0.1378** (0.0622)    -0.3443 (0.2402)         0.0049      0.0087    1.9057     -0.1599     -0.3664 |
+  | main   bmi_if_medicaid    static              conv_level   level 1               level 1              level 1              level 1              level 1               level 1                       .           .         .           .           . |
+  | main   bmi_if_medicaid   dynamic                    tau0   -0.0246 (0.1615)      0.0517 (0.1519)      -0.0168 (0.1610)     0.5868*** (0.1921)   -0.4369*** (0.1166)   -1.0222*** (0.2524)      0.0763      0.0078    0.6114     -0.4123     -0.9976 |
+  | main   bmi_if_medicaid   dynamic                    tau1   -0.5959*** (0.2301)   -0.5772** (0.2338)   -0.5869** (0.2305)   0.0491 (0.1800)      -0.2518** (0.1096)    -0.3857* (0.2337)        0.0187      0.0090    0.6449      0.3441      0.2102 |
+  | main   bmi_if_medicaid   dynamic                    tau2   0.8665*** (0.2646)    0.8288*** (0.2669)   0.8703*** (0.2639)   1.6634*** (0.4081)   0.3643*** (0.0924)    0.1233 (0.3103)         -0.0377      0.0038    0.7969     -0.5022     -0.7431 |
+  | main   bmi_if_medicaid   dynamic                    tau3   0.3123 (0.5451)       0.2869 (0.5519)      0.3232 (0.5441)      1.3428*** (0.4447)   0.3961*** (0.0886)    -1.2997*** (0.3988)     -0.0254      0.0109    1.0305      0.0838     -1.6120 |
+  | main   bmi_if_medicaid   dynamic                    tau4   0.4648 (0.3069)       0.5123* (0.3062)     0.4772 (0.3038)      2.3725*** (0.5689)   0.2473 (0.4015)       1.8108*** (0.2578)       0.0475      0.0124    1.9077     -0.2175      1.3460 |
+  | main   bmi_if_medicaid   dynamic                    tau5   -0.1295 (0.5800)      -0.1400 (0.5842)     -0.1259 (0.5795)     1.8436*** (0.6880)   -0.1728 (0.1604)      0.2284 (0.3855)         -0.0105      0.0036    1.9731     -0.0433      0.3579 |
+  | main   bmi_if_medicaid   dynamic                    pre1   -0.3068 (0.7945)      -0.0950 (0.9154)     -0.2905 (0.7951)     0.0795 (1.4710)      0.1933 (0.1815)       -1.1588 (0.9299)         0.2117      0.0163    0.3863      0.5000     -0.8521 |
+  | main   bmi_if_medicaid   dynamic                    pre2   -0.7473 (0.6789)      -0.6934 (0.8454)     -0.7322 (0.6785)     -0.6205 (1.1569)     -0.0740 (0.1287)      -1.6198* (0.8590)        0.0539      0.0152    0.1269      0.6733     -0.8724 |
+  | main   bmi_if_medicaid   dynamic                    pre3   -0.3507 (0.7904)      -0.4160 (1.0256)     -0.3473 (0.7932)     -0.6015 (1.1187)     -0.0537 (0.2010)      -0.3532 (0.6461)        -0.0653      0.0034   -0.2509      0.2970     -0.0025 |
+  | main   bmi_if_medicaid   dynamic                    pre4   -0.2016 (0.8118)      0.2951 (0.8858)      -0.1788 (0.8102)     -0.5753 (1.2792)     0.3348* (0.2023)      -1.2851** (0.5468)       0.4968      0.0228   -0.3737      0.5365     -1.0834 |
+  | main   bmi_if_medicaid   dynamic                    pre5   0.0703 (0.8441)       0.3562 (1.0122)      0.0945 (0.8405)      -0.2708 (1.1183)     0.1905 (0.1752)       0.1858 (0.6573)          0.2860      0.0242   -0.3411      0.1202      0.1155 |
+  | main   bmi_if_medicaid   dynamic                    pre6   -0.8248 (0.7644)      -0.7792 (0.9227)     -0.7991 (0.7608)     -1.1789 (0.9267)     -0.4882* (0.2811)     -0.0130 (0.9697)         0.0455      0.0257   -0.3542      0.3366      0.8118 |
+  | main   bmi_if_medicaid   dynamic          pretrend_joint   joint p=0.000         joint p=0.000        joint p=0.000        joint p=0.000        joint p=0.030         joint p=0.000                 .           .         .           .           . |
+  | main   bmi_if_medicaid   dynamic              conv_level   level 1               level 1              level 1              level 1              level 1               level 1                       .           .         .           .           . |
+  | main   bmi_if_medicaid   dynamic         pretrend_native   native p=0.001        native p=0.004       native p=0.001       native p=0.001       native p=0.053        native p=0.000                .           .         .           .           . |
+  +-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+Observations used in each scenario:
+
+  +----------------------------------------------------------------------------------------------------+
+  |  run           outcome     model   term   nnbase   nnnoOKMO   nnaddN~C   nntrend   nnlt30   nnge30 |
+  |----------------------------------------------------------------------------------------------------|
+  | main   bmi_if_medicaid    static    tau   58,469     56,197     60,878    58,469   37,302   21,167 |
+  | main   bmi_if_medicaid   dynamic   tau0   56,809     54,537     59,218    56,809   36,293   20,516 |
+  +----------------------------------------------------------------------------------------------------+
+(file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/ind_did_sens24_wide.csv not found)
+file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/ind_did_sens24_wide.csv saved
+(42 observations deleted)
+file C:\Users\JSEMPR~1\AppData\Local\Temp\ST_6fb8_000003.tmp saved as .dta format
+(115 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             3
+        from master                         3  (_mt==1)
+        from using                          0  (_mt==2)
+
+    Matched                                14  (_mt==3)
+    -----------------------------------------
+(4 missing values generated)
+(4 missing values generated)
+(3 missing values generated)
+
+================= tie-out: scenario base vs primary S1 =================
+rows compared: 14   rows only in the sensitivity file: 3   rows only in the primary file: 0
+largest absolute difference   b: 9.49240686055e-15   se: 0   p: 8.99280649946e-15
+TIE-OUT OK: scenario base reproduces the primary S1 estimates (all 14 rows).
+      name:  <unnamed>
+       log:  C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/ind_did_sens24.log
+  log type:  text
+ closed on:   2 Nov 2026, 21:28:03
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

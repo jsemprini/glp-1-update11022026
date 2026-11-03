@@ -1,0 +1,571 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/agg_util_sens24.log
+  log type:  text
+ opened on:   2 Nov 2026, 20:32:30
+
+=== Aggregate utilization DiD, sensitivity analyses, S1 model, main sample, run on  2 Nov 2026 20:32:30 ===
+scenarios: base noOKMO addNEDC      (the tie-out at the end needs 02 run with fixsample = 1; fixsample is now 1)
+time index 1 = 2021Q1; last quarter in the file = 16; first_tx = 17 means never treated
+
+States whose sample membership changes across scenarios (rows in the file, rows with the first outcome observed, first_tx):
+  FIPS  6:  rows 16   with rx_ob_1k_adult observed 16   of which in 2025 0   post missing 0   first_tx 9
+  FIPS 32:  rows 16   with rx_ob_1k_adult observed 16   of which in 2025 0   post missing 0   first_tx 17
+  FIPS 11:  rows 16   with rx_ob_1k_adult observed 16   of which in 2025 0   post missing 0   first_tx 17
+  FIPS 31:  rows 16   with rx_ob_1k_adult observed 16   of which in 2025 0   post missing 0   first_tx 17
+  FIPS 29:  rows 16   with rx_ob_1k_adult observed 16   of which in 2025 0   post missing 0   first_tx 16
+  FIPS 40:  rows 16   with rx_ob_1k_adult observed 16   of which in 2025 0   post missing 0   first_tx 17
+  (FIPS 6 = CA, 32 = NV, 11 = DC, 31 = NE, 29 = MO, 40 = OK. A state with 0 rows is not in the state-quarter file.)
+
+################ main | scenario base | state-quarters in the sample (rx_ob_1k_adult): 592 ################
+
+-------- main | rx_ob_1k_adult | S1 | scenario base | state-quarters used: 592 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+-------- main | spend_ob_adult | S1 | scenario base | state-quarters used: 560 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+-------- main | rx_nonob_1k_adult | S1 | scenario base | state-quarters used: 592 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+-------- main | spend_nonob_adult | S1 | scenario base | state-quarters used: 576 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+################ main | scenario noOKMO | state-quarters in the sample (rx_ob_1k_adult): 560 ################
+
+-------- main | rx_ob_1k_adult | S1 | scenario noOKMO | state-quarters used: 560 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+-------- main | spend_ob_adult | S1 | scenario noOKMO | state-quarters used: 528 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+-------- main | rx_nonob_1k_adult | S1 | scenario noOKMO | state-quarters used: 560 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+-------- main | spend_nonob_adult | S1 | scenario noOKMO | state-quarters used: 544 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+################ main | scenario addNEDC | state-quarters in the sample (rx_ob_1k_adult): 624 ################
+
+-------- main | rx_ob_1k_adult | S1 | scenario addNEDC | state-quarters used: 624 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+-------- main | spend_ob_adult | S1 | scenario addNEDC | state-quarters used: 592 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+-------- main | rx_nonob_1k_adult | S1 | scenario addNEDC | state-quarters used: 624 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+-------- main | spend_nonob_adult | S1 | scenario addNEDC | state-quarters used: 608 --------
+static (single tau)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+static: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+dynamic (tau0-tau5, pre1-pre6)
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+A problem has occured with determining delta. Please specify it explicitly.
+invalid syntax
+dynamic: convergence level 0 (1 = as in 02, 5 = nose, 0 = failed)
+
+================= main sample: sensitivity analyses vs the primary S1 model, aggregate utilization DiD =================
+file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/agg_util_sens24_long.csv saved
+(216 missing values generated)
+(0 real changes made)
+(12 real changes made)
+(0 real changes made)
+(0 real changes made)
+(24 real changes made)
+(180 real changes made)
+(j = addNEDC base noOKMO)
+
+Data                               Long   ->   Wide
+-----------------------------------------------------------------------------
+Number of observations              216   ->   72          
+Number of variables                   9   ->   14          
+j variable (3 values)              spec   ->   (dropped)
+xij variables:
+                                   cell   ->   celladdNEDC cellbase cellnoOKMO
+                                     nn   ->   nnaddNEDC nnbase nnnoOKMO
+                                      b   ->   baddNEDC bbase bnoOKMO
+-----------------------------------------------------------------------------
+(68 missing values generated)
+(68 missing values generated)
+
+Cells are coefficient (std. err.) with * p<0.10, ** p<0.05, *** p<0.01; model sample rows give counts; d_<scenario> = scenario minus base point estimate.
+
+  +----------------------------------------------------------------------------------------------------------------+
+  |  run             outcome     model                 term   cellbase   cellno~O   cellad~C   d_noOKMO   d_addN~C |
+  |----------------------------------------------------------------------------------------------------------------|
+  | main            (sample)    sample             n_states   37         35         39          -2.0000     2.0000 |
+  | main            (sample)    sample     n_treated_states   10         9          10          -1.0000     0.0000 |
+  | main            (sample)    sample     n_state_quarters   592        560        624        -32.0000    32.0000 |
+  | main            (sample)    sample   n_treated_quarters   76         75         76          -1.0000     0.0000 |
+  |----------------------------------------------------------------------------------------------------------------|
+  | main      rx_ob_1k_adult    static                  tau   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult    static           conv_level   level 0    level 0    level 0           .          . |
+  | main      rx_ob_1k_adult   dynamic                 tau0   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 tau1   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 tau2   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 tau3   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 tau4   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 tau5   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 pre1   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 pre2   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 pre3   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 pre4   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 pre5   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic                 pre6   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic       pretrend_joint   n/a        n/a        n/a               .          . |
+  | main      rx_ob_1k_adult   dynamic           conv_level   level 0    level 0    level 0           .          . |
+  | main      rx_ob_1k_adult   dynamic      pretrend_native   n/a        n/a        n/a               .          . |
+  |----------------------------------------------------------------------------------------------------------------|
+  | main      spend_ob_adult    static                  tau   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult    static           conv_level   level 0    level 0    level 0           .          . |
+  | main      spend_ob_adult   dynamic                 tau0   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 tau1   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 tau2   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 tau3   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 tau4   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 tau5   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 pre1   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 pre2   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 pre3   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 pre4   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 pre5   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic                 pre6   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic       pretrend_joint   n/a        n/a        n/a               .          . |
+  | main      spend_ob_adult   dynamic           conv_level   level 0    level 0    level 0           .          . |
+  | main      spend_ob_adult   dynamic      pretrend_native   n/a        n/a        n/a               .          . |
+  |----------------------------------------------------------------------------------------------------------------|
+  | main   rx_nonob_1k_adult    static                  tau   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult    static           conv_level   level 0    level 0    level 0           .          . |
+  | main   rx_nonob_1k_adult   dynamic                 tau0   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 tau1   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 tau2   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 tau3   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 tau4   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 tau5   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 pre1   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 pre2   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 pre3   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 pre4   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 pre5   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic                 pre6   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic       pretrend_joint   n/a        n/a        n/a               .          . |
+  | main   rx_nonob_1k_adult   dynamic           conv_level   level 0    level 0    level 0           .          . |
+  | main   rx_nonob_1k_adult   dynamic      pretrend_native   n/a        n/a        n/a               .          . |
+  |----------------------------------------------------------------------------------------------------------------|
+  | main   spend_nonob_adult    static                  tau   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult    static           conv_level   level 0    level 0    level 0           .          . |
+  | main   spend_nonob_adult   dynamic                 tau0   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 tau1   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 tau2   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 tau3   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 tau4   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 tau5   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 pre1   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 pre2   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 pre3   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 pre4   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 pre5   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic                 pre6   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic       pretrend_joint   n/a        n/a        n/a               .          . |
+  | main   spend_nonob_adult   dynamic           conv_level   level 0    level 0    level 0           .          . |
+  | main   spend_nonob_adult   dynamic      pretrend_native   n/a        n/a        n/a               .          . |
+  +----------------------------------------------------------------------------------------------------------------+
+
+Observations used in each scenario:
+
+  +--------------------------------------------------------------------------+
+  |  run             outcome     model   term   nnbase   nnnoOKMO   nnaddN~C |
+  |--------------------------------------------------------------------------|
+  | main      rx_ob_1k_adult    static    tau        .          .          . |
+  | main      rx_ob_1k_adult   dynamic   tau0        .          .          . |
+  |--------------------------------------------------------------------------|
+  | main      spend_ob_adult    static    tau        .          .          . |
+  | main      spend_ob_adult   dynamic   tau0        .          .          . |
+  |--------------------------------------------------------------------------|
+  | main   rx_nonob_1k_adult    static    tau        .          .          . |
+  | main   rx_nonob_1k_adult   dynamic   tau0        .          .          . |
+  |--------------------------------------------------------------------------|
+  | main   spend_nonob_adult    static    tau        .          .          . |
+  | main   spend_nonob_adult   dynamic   tau0        .          .          . |
+  +--------------------------------------------------------------------------+
+file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/agg_util_sens24_wide.csv saved
+(204 observations deleted)
+file C:\Users\JSEMPR~1\AppData\Local\Temp\ST_6fb8_000002.tmp saved as .dta format
+(148 observations deleted)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                                68  (_mt==3)
+    -----------------------------------------
+(60 missing values generated)
+(68 missing values generated)
+(68 missing values generated)
+
+================= tie-out: scenario base vs primary S1 =================
+rows compared: 68   rows only in the sensitivity file: 0   rows only in the primary file: 0
+largest absolute difference   b: 1   se: .   p: .
+TIE-OUT WARNING: 68 of 68 rows differ from the primary results (|difference| > 1e-6, a change in missingness or in N); 0 primary rows are missing here.
+Check the sample definition and the convergence level of those fits before using the sensitivity results.
+
+  +--------------------------------------------------------------------------------------------------+
+  |  run             outcome     model              term   b           b0   se         se0   n    n0 |
+  |--------------------------------------------------------------------------------------------------|
+  | main   rx_nonob_1k_adult   dynamic        conv_level   0            1    .           .   .   569 |
+  | main   rx_nonob_1k_adult   dynamic              pre1   .    1.8982677    .   2.2147111   .   569 |
+  | main   rx_nonob_1k_adult   dynamic              pre2   .    .94552608    .   1.7787689   .   569 |
+  | main   rx_nonob_1k_adult   dynamic              pre3   .    1.3750116    .   1.5681983   .   569 |
+  | main   rx_nonob_1k_adult   dynamic              pre4   .     1.614617    .   1.5232971   .   569 |
+  |--------------------------------------------------------------------------------------------------|
+  | main   rx_nonob_1k_adult   dynamic              pre5   .    .64315865    .   .84125246   .   569 |
+  | main   rx_nonob_1k_adult   dynamic              pre6   .   -.04638112    .   .62371295   .   569 |
+  | main   rx_nonob_1k_adult   dynamic    pretrend_joint   .            .    .           .   .   569 |
+  | main   rx_nonob_1k_adult   dynamic   pretrend_native   .            .    .           .   .   569 |
+  | main   rx_nonob_1k_adult   dynamic              tau0   .    .60728244    .   1.2502002   .   569 |
+  |--------------------------------------------------------------------------------------------------|
+  | main   rx_nonob_1k_adult   dynamic              tau1   .   -.88507451    .   1.7587731   .   569 |
+  | main   rx_nonob_1k_adult   dynamic              tau2   .     .1126822    .    2.019009   .   569 |
+  | main   rx_nonob_1k_adult   dynamic              tau3   .   -1.7485821    .   2.1775423   .   569 |
+  | main   rx_nonob_1k_adult   dynamic              tau4   .   -.41134641    .   2.7152075   .   569 |
+  | main   rx_nonob_1k_adult   dynamic              tau5   .   -1.4575711    .    2.637962   .   569 |
+  |--------------------------------------------------------------------------------------------------|
+  | main   rx_nonob_1k_adult    static        conv_level   0            1    .           .   .   592 |
+  | main   rx_nonob_1k_adult    static               tau   .   -1.0934335    .    2.208619   .   592 |
+  | main      rx_ob_1k_adult   dynamic        conv_level   0            1    .           .   .   569 |
+  | main      rx_ob_1k_adult   dynamic              pre1   .     1.173388    .   .34197886   .   569 |
+  | main      rx_ob_1k_adult   dynamic              pre2   .     .9825573    .   .31606964   .   569 |
+  |--------------------------------------------------------------------------------------------------|
+  | main      rx_ob_1k_adult   dynamic              pre3   .     .7970476    .   .29023485   .   569 |
+  | main      rx_ob_1k_adult   dynamic              pre4   .    .59824915    .   .26528887   .   569 |
+  | main      rx_ob_1k_adult   dynamic              pre5   .    .37314478    .   .15913473   .   569 |
+  | main      rx_ob_1k_adult   dynamic              pre6   .    .14131202    .   .06788243   .   569 |
+  | main      rx_ob_1k_adult   dynamic    pretrend_joint   .            .    .           .   .   569 |
+  |--------------------------------------------------------------------------------------------------|
+  | main      rx_ob_1k_adult   dynamic   pretrend_native   .            .    .           .   .   569 |
+  | main      rx_ob_1k_adult   dynamic              tau0   .    2.6106304    .    .1682561   .   569 |
+  | main      rx_ob_1k_adult   dynamic              tau1   .    6.9236241    .   .56632225   .   569 |
+  | main      rx_ob_1k_adult   dynamic              tau2   .    8.7772238    .    .6789364   .   569 |
+  | main      rx_ob_1k_adult   dynamic              tau3   .    9.8083203    .   .79328339   .   569 |
+  |--------------------------------------------------------------------------------------------------|
+  | main      rx_ob_1k_adult   dynamic              tau4   .    8.4550751    .   1.0498851   .   569 |
+  | main      rx_ob_1k_adult   dynamic              tau5   .    14.681447    .    1.968293   .   569 |
+  | main      rx_ob_1k_adult    static        conv_level   0            1    .           .   .   592 |
+  | main      rx_ob_1k_adult    static               tau   .    12.996606    .   1.1045819   .   592 |
+  | main   spend_nonob_adult   dynamic        conv_level   0            1    .           .   .   555 |
+  |--------------------------------------------------------------------------------------------------|
+  | main   spend_nonob_adult   dynamic              pre1   .    .42712912    .   2.1922775   .   555 |
+  | main   spend_nonob_adult   dynamic              pre2   .   -.23891077    .   1.8114967   .   555 |
+  | main   spend_nonob_adult   dynamic              pre3   .    .31473628    .   1.4510125   .   555 |
+  | main   spend_nonob_adult   dynamic              pre4   .    .06742024    .   1.4686093   .   555 |
+  | main   spend_nonob_adult   dynamic              pre5   .   -.51258321    .   .71810728   .   555 |
+  |--------------------------------------------------------------------------------------------------|
+  | main   spend_nonob_adult   dynamic              pre6   .   -.22067016    .   .64841001   .   555 |
+  | main   spend_nonob_adult   dynamic    pretrend_joint   .            .    .           .   .   555 |
+  | main   spend_nonob_adult   dynamic   pretrend_native   .            .    .           .   .   555 |
+  | main   spend_nonob_adult   dynamic              tau0   .     .3818321    .    1.329021   .   555 |
+  | main   spend_nonob_adult   dynamic              tau1   .   -1.8173491    .   1.7368241   .   555 |
+  |--------------------------------------------------------------------------------------------------|
+  | main   spend_nonob_adult   dynamic              tau2   .   -.71120168    .   2.2890889   .   555 |
+  | main   spend_nonob_adult   dynamic              tau3   .    -2.459472    .     2.32663   .   555 |
+  | main   spend_nonob_adult   dynamic              tau4   .   -.75503571    .   3.0826011   .   555 |
+  | main   spend_nonob_adult   dynamic              tau5   .    -2.171984    .   3.1071199   .   555 |
+  | main   spend_nonob_adult    static        conv_level   0            1    .           .   .   576 |
+  |--------------------------------------------------------------------------------------------------|
+  | main   spend_nonob_adult    static               tau   .    -1.406891    .   2.4751703   .   576 |
+  | main      spend_ob_adult   dynamic        conv_level   0            1    .           .   .   539 |
+  | main      spend_ob_adult   dynamic              pre1   .    1.2092895    .   .37381775   .   539 |
+  | main      spend_ob_adult   dynamic              pre2   .    .99253523    .   .31875031   .   539 |
+  | main      spend_ob_adult   dynamic              pre3   .    .76683384    .   .27258962   .   539 |
+  |--------------------------------------------------------------------------------------------------|
+  | main      spend_ob_adult   dynamic              pre4   .    .50591805    .   .20756586   .   539 |
+  | main      spend_ob_adult   dynamic              pre5   .    .30135485    .   .09995481   .   539 |
+  | main      spend_ob_adult   dynamic              pre6   .    .11660997    .    .0573998   .   539 |
+  | main      spend_ob_adult   dynamic    pretrend_joint   .            .    .           .   .   539 |
+  | main      spend_ob_adult   dynamic   pretrend_native   .            .    .           .   .   539 |
+  |--------------------------------------------------------------------------------------------------|
+  | main      spend_ob_adult   dynamic              tau0   .    3.1284464    .   .24430737   .   539 |
+  | main      spend_ob_adult   dynamic              tau1   .    8.8387786    .   .83228989   .   539 |
+  | main      spend_ob_adult   dynamic              tau2   .    12.073589    .    .8152038   .   539 |
+  | main      spend_ob_adult   dynamic              tau3   .    13.362827    .   .97192609   .   539 |
+  | main      spend_ob_adult   dynamic              tau4   .    10.924479    .   1.4349765   .   539 |
+  |--------------------------------------------------------------------------------------------------|
+  | main      spend_ob_adult   dynamic              tau5   .    18.073475    .    2.872747   .   539 |
+  | main      spend_ob_adult    static        conv_level   0            1    .           .   .   560 |
+  | main      spend_ob_adult    static               tau   .    16.185725    .   1.5553384   .   560 |
+  +--------------------------------------------------------------------------------------------------+
+      name:  <unnamed>
+       log:  C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/6-final/ii-results/agg_util_sens24.log
+  log type:  text
+ closed on:   2 Nov 2026, 20:32:30
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

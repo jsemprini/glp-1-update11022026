@@ -1,0 +1,283 @@
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  C:\Users\jsemprini\OneDrive - Des Moines University\9-Internal-Collab\a-Devine_GLP1\6-final\ii-results\build_state_controls.log
+  log type:  text
+ opened on:   2 Nov 2026, 18:19:30
+
+. 
+. *---- 1. state-quarter file ----------------------------------------------------
+. use "$prep/GLP1_state_quarter_analysis.dta", clear
+
+. capture confirm variable yq
+
+. if _rc == 0 rename yq full_yq
+
+. foreach v in year quarter {
+  2.     capture confirm numeric variable `v'
+  3.     if _rc destring `v', replace force
+  4. }
+
+. egen yq = group(year quarter)
+
+. gen int yq_date = yq(year, quarter)
+
+. format yq_date %tq
+
+. * yq in unwinding.dta and in the individual-level merges is egen group(year quarter) with 2021Q1 = 1
+. assert yq == yq_date - tq(2021q1) + 1
+
+. isid _state yq
+
+. foreach v in post enroll_adult rx_ob_1k_adult spend_ob_adult rx_nonob_1k_adult spend_nonob_adult {
+  2.     confirm variable `v'
+  3. }
+
+. 
+. *---- 2. unwinding and enrollment (same construction as the repo) ---------------
+. merge 1:1 _state yq using "$prep/b-data/unwinding.dta", generate(_mu)
+(variable yq_date was int, now float to accommodate using data's values)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                            60
+        from master                         0  (_mu==1)
+        from using                         60  (_mu==2)
+
+    Matched                               960  (_mu==3)
+    -----------------------------------------
+
+. tab _mu
+
+   Matching result from |
+                  merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+         Using only (2) |         60        5.88        5.88
+            Matched (3) |        960       94.12      100.00
+------------------------+-----------------------------------
+                  Total |      1,020      100.00
+
+. drop if _mu == 2
+(60 observations deleted)
+
+. drop _mu
+
+. confirm variable value
+
+. replace value = 0 if missing(value)
+(720 real changes made)
+
+. gen ln_unwind = log(value + 1)
+
+. gen ln_enroll = log(enroll_adult)
+
+. label var ln_unwind "log(unwinding disenrollments + 1)"
+
+. label var ln_enroll "log adult Medicaid enrollment, same quarter"
+
+. 
+. *---- 3. policy variables ----------------------------------------------------------
+. foreach v of global newvars {
+  2.     confirm new variable `v'
+  3. }
+
+. merge 1:1 _state yq_date using "$ctrl/controls_state_yq.dta", keepusing($newvars) keep(master match) generate(_mc)
+
+    Result                      Number of obs
+    -----------------------------------------
+    Not matched                             0
+    Matched                               960  (_mc==3)
+    -----------------------------------------
+
+. tab _mc
+
+   Matching result from |
+                  merge |      Freq.     Percent        Cum.
+------------------------+-----------------------------------
+            Matched (3) |        960      100.00      100.00
+------------------------+-----------------------------------
+                  Total |        960      100.00
+
+. * 3 = matched. 1 = a state-quarter outside the controls panel (2021Q1-2025Q4, 50 states + DC); its policy variables are missing.
+. drop _mc
+
+. 
+. count
+  960
+
+. sort _state yq
+
+. save "$ctrl/state_controls_yq.dta", replace
+file C:/Users/jsemprini/OneDrive - Des Moines University/9-Internal-Collab/a-Devine_GLP1/1-stata/controls/state_controls_yq.dta saved
+
+. 
+. *---- 4. collinearity of the full control set in the estimation samples -------------
+. * main = 2021Q1-2024Q4 ; ext = through 2025Q4 without CA, NV, MS (no 2025 BRFSS interviews in CA and NV)
+. foreach run in main ext {
+  2.     preserve
+  3.     drop if inlist(_state, 1, 12, 13, 20, 28, 37, 45, 46, 47, 48) | inlist(_state, 55, 56)
+  4.     if "`run'" == "main" drop if yq_date > tq(2024q4)
+  5.     if "`run'" == "ext" drop if inlist(_state, 6, 32, 28)
+  6.     egen byte _nm = rowmiss(ln_enroll ln_unwind $pol_all)
+  7.     di _n as text "======== `run' sample: state-quarters with every control observed ========"
+  8.     tab _nm
+  9.     keep if _nm == 0
+ 10.     egen byte _tag = tag(_state)
+ 11.     quietly count if _tag
+ 12.     di as text "states in the complete-case sample: " r(N)
+ 13.     quietly count
+ 14.     di as text "state-quarter cells: " r(N)
+ 15.     di as text "States lost to missing controls: DC (no NCSL data) and Nebraska (no partisan legislature)."
+ 16.     vif_resid ln_enroll ln_unwind $pol_all
+ 17.     restore
+ 18. }
+(180 observations deleted)
+(156 observations deleted)
+
+======== main sample: state-quarters with every control observed ========
+
+        _nm |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        592       94.87       94.87
+          2 |         16        2.56       97.44
+          3 |         16        2.56      100.00
+------------+-----------------------------------
+      Total |        624      100.00
+(32 observations deleted)
+states in the complete-case sample: 37
+state-quarter cells: 592
+States lost to missing controls: DC (no NCSL data) and Nebraska (no partisan legislature).
+
+variable                        SD raw   SD after FE       VIF
+ln_enroll                       1.0569        0.0708      1.13
+ln_unwind                       4.7969        0.9002      1.06
+gov_dem                         0.4988        0.1920      1.06
+pct_dem_senate                 22.8532        2.8268      1.63
+pct_dem_house                  21.1683        2.0252      1.61
+unw_term_pb                     2.7679        1.7331      1.10
+held_proc_share                 0.3006        0.2223      1.13
+post_x_base_exparte3           19.1287        8.3299      1.12
+ha_usds_assist                  0.1290        0.1049      1.04
+
+Residualized correlations (state and quarter effects removed):
+
+             | rr_ln_~l rr_ln_~d rr_gov~m rr_pc~te rr_pc~se rr_unw~b rr_hel~e
+-------------+---------------------------------------------------------------
+rr_ln_enroll |   1.0000 
+             |      592
+             |
+rr_ln_unwind |   0.1474   1.0000 
+             |      592      592
+             |
+  rr_gov_dem |  -0.0149   0.0262   1.0000 
+             |      592      592      592
+             |
+rr_pct_de~te |   0.1107   0.0335  -0.0345   1.0000 
+             |      592      592      592      592
+             |
+rr_pct_de~se |   0.0785   0.1029   0.1421   0.5785   1.0000 
+             |      592      592      592      592      592
+             |
+rr_unw_ter~b |  -0.1290   0.1301  -0.0016  -0.1089  -0.0459   1.0000 
+             |      592      592      592      592      592      592
+             |
+rr_held_pr~e |   0.0621  -0.0117  -0.0480   0.1671   0.0056  -0.2075   1.0000 
+             |      592      592      592      592      592      592      592
+             |
+rr_post_x_~3 |   0.2066  -0.0277   0.1010   0.0662   0.0034  -0.0938  -0.1443 
+             |      592      592      592      592      592      592      592
+             |
+rr_ha_usds~t |   0.1422   0.0756  -0.0045   0.0214   0.0151   0.0462   0.0517 
+             |      592      592      592      592      592      592      592
+             |
+
+             | rr_pos~3 rr_ha_~t
+-------------+------------------
+rr_post_x_~3 |   1.0000 
+             |      592
+             |
+rr_ha_usds~t |  -0.0485   1.0000 
+             |      592      592
+             |
+(180 observations deleted)
+(40 observations deleted)
+
+======== ext sample: state-quarters with every control observed ========
+
+        _nm |      Freq.     Percent        Cum.
+------------+-----------------------------------
+          0 |        700       94.59       94.59
+          2 |         20        2.70       97.30
+          3 |         20        2.70      100.00
+------------+-----------------------------------
+      Total |        740      100.00
+(40 observations deleted)
+states in the complete-case sample: 35
+state-quarter cells: 700
+States lost to missing controls: DC (no NCSL data) and Nebraska (no partisan legislature).
+
+variable                        SD raw   SD after FE       VIF
+ln_enroll                       0.9869        0.0708      1.11
+ln_unwind                       4.4047        0.8242      1.05
+gov_dem                         0.4994        0.1766      1.06
+pct_dem_senate                 22.8869        3.1858      1.64
+pct_dem_house                  21.1799        2.2616      1.65
+unw_term_pb                     2.5561        1.5856      1.09
+held_proc_share                 0.2770        0.2076      1.11
+post_x_base_exparte3           20.1959        8.5860      1.11
+ha_usds_assist                  0.1127        0.0829      1.03
+
+Residualized correlations (state and quarter effects removed):
+
+             | rr_ln_~l rr_ln_~d rr_gov~m rr_pc~te rr_pc~se rr_unw~b rr_hel~e
+-------------+---------------------------------------------------------------
+rr_ln_enroll |   1.0000 
+             |      700
+             |
+rr_ln_unwind |   0.1422   1.0000 
+             |      700      700
+             |
+  rr_gov_dem |   0.0157   0.0294   1.0000 
+             |      700      700      700
+             |
+rr_pct_de~te |   0.0878  -0.0002   0.0526   1.0000 
+             |      700      700      700      700
+             |
+rr_pct_de~se |   0.0548   0.0517   0.1943   0.5958   1.0000 
+             |      700      700      700      700      700
+             |
+rr_unw_ter~b |  -0.0963   0.1481   0.0076  -0.0743  -0.0213   1.0000 
+             |      700      700      700      700      700      700
+             |
+rr_held_pr~e |   0.0667  -0.0050  -0.0531   0.1517   0.0230  -0.2041   1.0000 
+             |      700      700      700      700      700      700      700
+             |
+rr_post_x_~3 |   0.2214  -0.0063   0.1060   0.0844   0.0013  -0.0684  -0.1021 
+             |      700      700      700      700      700      700      700
+             |
+rr_ha_usds~t |   0.0807   0.0281  -0.0128  -0.0323  -0.0392   0.0587   0.0972 
+             |      700      700      700      700      700      700      700
+             |
+
+             | rr_pos~3 rr_ha_~t
+-------------+------------------
+rr_post_x_~3 |   1.0000 
+             |      700
+             |
+rr_ha_usds~t |  -0.0587   1.0000 
+             |      700      700
+             |
+
+. di _n as text "Reading the table: a VIF above 10 means that control is almost a linear combination of the others once"
+
+Reading the table: a VIF above 10 means that control is almost a linear combination of the others once
+
+. di as text "state and quarter effects are removed. If unw_term_pb overlaps with ln_unwind, drop one of them from pol_all."
+state and quarter effects are removed. If unw_term_pb overlaps with ln_unwind, drop one of them from pol_all.
+
+. 
+. log close
+      name:  <unnamed>
+       log:  C:\Users\jsemprini\OneDrive - Des Moines University\9-Internal-Collab\a-Devine_GLP1\6-final\ii-results\build_state_controls.log
+  log type:  text
+ closed on:   2 Nov 2026, 18:19:31
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
